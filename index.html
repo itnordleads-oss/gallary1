@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Relay — Gallery Site 01</title>
+  <meta name="description" content="Advanced Relay recreation from webv.mp4 — full top-to-bottom cinematic landing." />
+  <meta name="theme-color" content="#050505" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="robots" content="index,follow" />
+  <meta property="og:title" content="Relay — Gallery Site 01" />
+  <meta property="og:description" content="A cinematic workflow landing page with animated energy ribbons." />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=responsive-1" />
+</head>
+<body>
+  <canvas id="ribbons" aria-hidden="true"></canvas>
+  <div class="vignette" aria-hidden="true"></div>
+
+  <header class="nav">
+    <a class="logo" href="#top"><span class="logo-mark"></span>Relay</a>
+    <nav class="links" aria-label="Primary">
+      <a href="#product">Product</a>
+      <a href="#how">How it works</a>
+      <a href="#customers">Customers</a>
+      <a href="#pricing">Pricing</a>
+    </nav>
+    <div class="nav-end">
+      <span class="status"><i></i> all systems normal</span>
+      <a class="btn btn-lime" href="#cta">Start free</a>
+    </div>
+    <button class="menu-btn" type="button" aria-label="Menu" aria-expanded="false"><span></span><span></span></button>
+  </header>
+
+  <main id="top">
+    <!-- 1 HERO -->
+    <section class="hero" id="product">
+      <div class="hero-left">
+        <span class="pill reveal">open beta / 240 apps connected</span>
+        <h1 class="reveal">The handoffs run <em>themselves.</em></h1>
+        <p class="lede reveal">Relay runs the steps between your apps and only asks a person when it matters.</p>
+        <div class="hero-cta reveal">
+          <a class="btn btn-lime" href="#cta">Start free</a>
+          <a class="btn btn-ghost" href="#how"><span class="play"></span> Watch a build, 2 minutes</a>
+        </div>
+        <p class="micro reveal">free for 14 days / no card / no call with sales</p>
+      </div>
+      <aside class="glass hero-card reveal float-card" id="workflowCard">
+        <div class="card-top">
+          <span>Refunds over 5000 · 3 steps / 1 branch</span>
+          <span class="live">running</span>
+        </div>
+        <div class="nodes" id="workflowNodes">
+          <div class="node bubble" style="--d:0"><span class="tag stripe"></span>Refund created</div>
+          <div class="wire bubble-wire" style="--d:1"><i></i></div>
+          <div class="node decision bubble" style="--d:2">Amount over 5000</div>
+          <div class="branch-labels bubble-wire" style="--d:3"><span>true</span><span>else</span></div>
+          <div class="split">
+            <div class="col">
+              <div class="wire short bubble-wire" style="--d:4"><i></i></div>
+              <div class="node bubble" style="--d:5">Ask finance</div>
+            </div>
+            <div class="col">
+              <div class="wire short bubble-wire" style="--d:4"><i></i></div>
+              <div class="node bubble" style="--d:6"><span class="tag pg"></span>Log to warehouse</div>
+            </div>
+          </div>
+        </div>
+        <div class="card-logs bubble" style="--d:7">
+          <div><b>Last runs</b><small>invoice reminder · 2m</small></div>
+          <div><small>refunds over 5000 · 8m</small></div>
+          <div class="ok">✓</div>
+        </div>
+      </aside>
+    </section>
+
+    <!-- 2 INTEGRATIONS / GLUE -->
+    <section class="section integrations" id="how">
+      <p class="kicker reveal">connects to 100 apps, and to whatever you build yourself</p>
+      <div class="apps reveal">
+        <div class="app"><span class="ico slack"></span>slack</div>
+        <div class="app"><span class="ico stripe"></span>stripe</div>
+        <div class="app"><span class="ico pg"></span>postgres</div>
+        <div class="app"><span class="ico hub"></span>hubspot</div>
+        <div class="app"><span class="ico x"></span>twitter</div>
+        <div class="app"><span class="ico box"></span>dropbox</div>
+      </div>
+      <div class="two-col">
+        <h2 class="reveal">Most of a process is <em>glue.</em></h2>
+        <p class="reveal muted">Copy this. Wait for that. Check it went through. Ask Dana if it's fine. Relay takes the glue and leaves you the decisions.</p>
+      </div>
+    </section>
+
+    <!-- 3 ONE CANVAS -->
+    <section class="section canvas-sec">
+      <div class="two-col top">
+        <div class="reveal">
+          <h3>One canvas, every branch.</h3>
+          <p class="muted">Drop a trigger, add a condition, split the path. A step that fails at 3am is retried four times.</p>
+        </div>
+        <aside class="glass reveal">
+          <div class="card-top"><span>run 41362</span><span class="live">live</span></div>
+          <ul class="run-steps">
+            <li><span>check refund</span><i style="--w:100%"></i></li>
+            <li class="active"><span>check amount</span><i style="--w:72%"></i></li>
+            <li><span>branch: over 5000</span><i style="--w:40%"></i></li>
+            <li><span>ask finance</span><i style="--w:18%"></i></li>
+          </ul>
+          <div class="ms-scale"><span>0</span><span>10</span><span>100</span><span>1000</span><span>2000 ms</span></div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- 4 EVERY RUN ON RECORD -->
+    <section class="section record-sec">
+      <div class="two-col">
+        <div class="reveal">
+          <h2>Every run is on the <em>record.</em></h2>
+          <p class="muted">Inputs, outputs and logs for 90 days. Replay any run before you trust it with money.</p>
+          <div class="approve-row">
+            <span class="waiting">waiting 20 min</span>
+            <button class="btn btn-lime sm" type="button">Approve</button>
+            <button class="btn btn-ghost sm" type="button">Hold</button>
+          </div>
+        </div>
+        <aside class="glass reveal chart-3d">
+          <div class="card-top"><span>runs per weekday</span><span>$2,000 average</span></div>
+          <div class="bars-3d">
+            <div class="bar-col"><div class="prism" style="--h:42%"></div><span>tue</span></div>
+            <div class="bar-col"><div class="prism" style="--h:58%"></div><span>wed</span></div>
+            <div class="bar-col"><div class="prism" style="--h:50%"></div><span>thu</span></div>
+            <div class="bar-col hot"><div class="prism" style="--h:88%"></div><span>fri</span></div>
+            <div class="bar-col"><div class="prism" style="--h:35%"></div><span>sat</span></div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- 5 BORING / RUNTIME CARDS -->
+    <section class="section boring-sec">
+      <div class="two-col top">
+        <h2 class="reveal"><em>Boring</em> in the ways that matter.</h2>
+        <p class="reveal muted">Credentials stay vaulted. Retries are boring. Regions are explicit. That’s the point.</p>
+      </div>
+      <div class="feature-grid">
+        <article class="glass reveal">
+          <h3>One runtime, every app</h3>
+          <p class="muted">One place for credentials and APIs — Slack to Stripe without duct tape.</p>
+          <div class="runtime-map">
+            <span class="hub">>></span>
+            <i class="ico stripe"></i><i class="ico slack"></i><i class="ico pg"></i><i class="ico hub"></i>
+          </div>
+        </article>
+        <article class="glass reveal">
+          <h3>Runs where your data lives</h3>
+          <p class="muted">Pick residency. Keep logs local. Ship globally when you mean to.</p>
+          <div class="regions">
+            <div><span>eu-central-1 · Frankfurt</span><b style="--w:92%"></b></div>
+            <div><span>us-east-1 · Virginia</span><b style="--w:64%"></b></div>
+            <div><span>ap-southeast-2 · Sydney</span><b style="--w:38%"></b></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- 6 DASHBOARD BENTO -->
+    <section class="section dash-sec" id="customers">
+      <h2 class="reveal">A Tuesday, seen from <em>Relay.</em></h2>
+      <div class="dash-grid">
+        <article class="glass reveal heat">
+          <div class="card-top"><span>weekly activity</span></div>
+          <div class="heatmap" aria-hidden="true"></div>
+        </article>
+        <article class="glass reveal ring-card">
+          <svg class="ring" viewBox="0 0 100 100">
+            <circle class="track" cx="50" cy="50" r="38"></circle>
+            <circle class="prog" cx="50" cy="50" r="38" data-pct="82"></circle>
+          </svg>
+          <strong><span data-count="82">0</span>%</strong>
+          <small>steps / min</small>
+        </article>
+        <article class="glass reveal">
+          <div class="card-top"><span>Waiting on people</span></div>
+          <div class="avatars">
+            <i></i><i></i><i></i><i></i><i></i>
+          </div>
+          <p><b>3 approvals</b> · longest wait 28 min</p>
+        </article>
+        <article class="glass reveal wave-card">
+          <div class="card-top"><span>Delivered and completed</span></div>
+          <svg class="wave" viewBox="0 0 200 60" aria-hidden="true">
+            <path d="M0 30 C20 10, 40 50, 60 30 S100 10, 120 30 S160 55, 180 28 200 30"></path>
+          </svg>
+        </article>
+        <article class="glass reveal map-card">
+          <div class="card-top"><span>Where it goes</span></div>
+          <div class="airports">
+            <div><span>lax</span><b data-count="46">0</b>%</div>
+            <div><span>fra</span><b data-count="38">0</b>%</div>
+            <div><span>syd</span><b data-count="16">0</b>%</div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- 7 SOCIAL METRICS -->
+    <section class="section metrics-sec">
+      <h2 class="reveal">Numbers that <em>explain away.</em></h2>
+      <div class="metric-row">
+        <article class="glass reveal">
+          <p class="big" data-count="62000">0</p>
+          <svg class="spark" viewBox="0 0 140 40"><path d="M0 28 C20 26, 30 8, 48 14 S78 34, 100 12 S125 8, 140 16"></path></svg>
+          <p class="muted">handoffs cleared · Marta Silves</p>
+        </article>
+        <article class="glass reveal">
+          <p class="big" data-count="11">0</p>
+          <div class="mini-bars"><i style="--h:40%"></i><i style="--h:65%"></i><i style="--h:50%"></i><i style="--h:80%"></i><i style="--h:55%"></i><i style="--h:90%"></i></div>
+          <p class="muted">teams onboarded · Omer Dewolf</p>
+        </article>
+        <article class="glass reveal">
+          <p class="big"><span data-count="99">0</span>%</p>
+          <div class="hbar"><span data-bar="99"></span></div>
+          <p class="muted">runs unblocked · Zion Blizzard</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- 8 PRICING SLIDER -->
+    <section class="section pricing-sec" id="pricing">
+      <h2 class="reveal">You pay for runs, not <em>for seats.</em></h2>
+      <div class="glass pricing reveal">
+        <div class="price-left">
+          <p>How many runs do you expect a month?</p>
+          <input id="runs" type="range" min="5000" max="100000" step="1000" value="30000" />
+          <div class="ticks"><span>5,000</span><span>30,000</span><span>100,000</span></div>
+        </div>
+        <div class="price-right">
+          <p class="plan">Team</p>
+          <p class="price">$<span id="priceVal">89</span> <small>/ month</small></p>
+          <a class="btn btn-lime" href="#cta">Start free</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9 STANDUP LIME BAND -->
+    <section class="section standup-sec">
+      <div class="lime-band reveal">
+        <h2>The best workflow is the one <em>in standup.</em></h2>
+        <button class="arrow-btn" type="button" aria-label="Next">»</button>
+      </div>
+    </section>
+
+    <!-- 10 FINAL CTA -->
+    <section class="section cta-sec" id="cta">
+      <div class="cta-bento">
+        <article class="glass dark-cta reveal">
+          <div class="logo mini"><span class="logo-mark"></span>Relay</div>
+          <h3>Automation for the work that lives between your tools.</h3>
+          <div class="cta-bottom">
+            <span class="muted">Stay in touch</span>
+            <div class="soc"><i class="ico slack"></i><i class="ico x"></i><i class="ico hub"></i><i class="ico pg"></i></div>
+          </div>
+          <div class="mega-chevs" aria-hidden="true"><span></span><span></span></div>
+        </article>
+        <article class="lime-band form-band reveal">
+          <h2>Pick the task you <em>hate</em> most.</h2>
+          <p>Tell Relay what burns your week. We’ll wire the first path.</p>
+          <form class="cta-form" novalidate aria-describedby="lead-form-status">
+            <label class="sr-only" for="lead-email">Work email</label>
+            <input id="lead-email" name="email" type="email" inputmode="email" autocomplete="email" maxlength="254" placeholder="you@company.com" required />
+            <button class="btn btn-dark" type="submit">Start free</button>
+          </form>
+          <p class="form-status" id="lead-form-status" role="status" aria-live="polite"></p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="foot-grid">
+      <div>
+        <div class="logo"><span class="logo-mark"></span>Relay</div>
+        <p class="muted">Gallery Site 01 · rebuilt from webv.mp4</p>
+        <span class="status"><i></i> all systems normal</span>
+      </div>
+      <div><h4>Product</h4><a href="#product">Overview</a><a href="#how">How it works</a><a href="#pricing">Pricing</a></div>
+      <div><h4>Company</h4><a href="#">About</a><a href="#">Customers</a><a href="#">Careers</a></div>
+      <div><h4>Legal</h4><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Security</a></div>
+    </div>
+    <div class="foot-bottom"><span>© 2026 Relay</span><span>Built for the gallery collection</span></div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script src="ribbons.js?v=production-1"></script>
+  <script src="main.js?v=scroll-5"></script>
+</body>
+</html>
