@@ -417,7 +417,18 @@ em { font-family: var(--serif); font-style: italic; font-weight: 400; }
 .no-gsap .reveal.is-in { opacity: 1; transform: none; }
 
 @media (max-width: 980px) {
-  html { scroll-behavior: auto; }
+  html, body {
+    scroll-behavior: auto;
+    overscroll-behavior-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  body { touch-action: pan-y; }
+  .nav, .glass {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  .nav { background: rgba(5, 5, 5, 0.94); }
+  .glass { background: rgba(16, 16, 16, 0.9); }
   .links, .nav-end .status { display: none; }
   .menu-btn { display: inline-flex; flex-direction: column; justify-content: center; align-items: stretch; }
   .nav.open .links {

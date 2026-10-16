@@ -30,13 +30,14 @@
   }));
 
   function resize() {
-    dpr = Math.min(devicePixelRatio || 1, lowPower ? 1.25 : 1.75);
-    w = innerWidth;
-    h = innerHeight;
+    dpr = Math.min(devicePixelRatio || 1, lowPower ? 1 : 1.75);
+    const nextW = Math.max(1, Math.round(canvas.clientWidth || innerWidth));
+    const nextH = Math.max(1, Math.round(canvas.clientHeight || innerHeight));
+    if (nextW === w && nextH === h) return;
+    w = nextW;
+    h = nextH;
     canvas.width = Math.floor(w * dpr);
     canvas.height = Math.floor(h * dpr);
-    canvas.style.width = `${w}px`;
-    canvas.style.height = `${h}px`;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
 
@@ -106,8 +107,8 @@
     ctx.lineJoin = "round";
     ctx.lineWidth = width;
     ctx.strokeStyle = `hsla(${hue}, 100%, 64%, ${alpha})`;
-    ctx.shadowColor = `hsla(${hue}, 100%, 58%, ${alpha})`;
-    ctx.shadowBlur = blur;
+    ctx.shadowColor = "transparent";
+    ctx.shadowBlur = lowPower ? 0 : blur;
     ctx.stroke();
     ctx.shadowBlur = 0;
   }
@@ -243,7 +244,22 @@
     cancelAnimationFrame(raf);
   }
 
-  addEventListener("resize", resize);
+  let resizeTimer = 0;
+  addEventListener("resize", () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(resize, lowPower ? 180 : 60);
+  });
+
+  let scrollIdle = 0;
+  addEventListener("scroll", () => {
+    const max = document.documentElement.scrollHeight - innerHeight;
+    window.__relayScroll = max > 0 ? window.scrollY / max : 0;
+    if (!lowPower) return;
+    stop();
+    clearTimeout(scrollIdle);
+    scrollIdle = setTimeout(start, 160);
+  }, { passive: true });
+
   document.addEventListener("visibilitychange", () => (document.hidden ? stop() : start()));
   resize();
   start();
