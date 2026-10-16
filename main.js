@@ -123,6 +123,26 @@
   // Kill old CSS reveal hiding — GSAP owns motion now
   gsap.set(".reveal", { clearProps: "all" });
 
+  const mobileMotion = matchMedia("(max-width: 980px)").matches;
+  if (mobileMotion) {
+    // Phone scroll was fighting hidden GSAP states: text stayed at opacity 0
+    // until a trigger fired, and clip/transform left the page feeling stuck.
+    gsap.set("h1, h2, h3, p, .reveal, .glass, .lime-band, .app, .btn, .kicker, .muted", {
+      opacity: 1,
+      x: 0,
+      y: 0,
+      scale: 1,
+      filter: "none",
+      clearProps: "transform,filter",
+    });
+    document.querySelectorAll(".section, .hero, .site-footer").forEach((section) => {
+      section.classList.add("is-in");
+      triggerSectionFX(section);
+    });
+    popWorkflow();
+    return;
+  }
+
   // Hero entrance
   const heroTl = gsap.timeline({ defaults: { ease: "power3.out" } });
   heroTl
@@ -144,8 +164,6 @@
       },
       "-=0.75"
     );
-
-  const mobileMotion = matchMedia("(max-width: 980px)").matches;
 
   // Parallax hero card stays off on touch layouts so the card cannot drift off-screen.
   const card = document.querySelector(".float-card");

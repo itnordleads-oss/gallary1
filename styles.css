@@ -13,13 +13,12 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; overflow-x: clip; }
+html { scroll-behavior: smooth; }
 body {
   margin: 0;
   color: var(--text);
   background: #050505;
   font-family: var(--body);
-  overflow-x: clip;
   max-width: 100%;
 }
 img, svg, video { max-width: 100%; height: auto; }
@@ -418,6 +417,7 @@ em { font-family: var(--serif); font-style: italic; font-weight: 400; }
 .no-gsap .reveal.is-in { opacity: 1; transform: none; }
 
 @media (max-width: 980px) {
+  html { scroll-behavior: auto; }
   .links, .nav-end .status { display: none; }
   .menu-btn { display: inline-flex; flex-direction: column; justify-content: center; align-items: stretch; }
   .nav.open .links {
