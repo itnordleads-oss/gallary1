@@ -8,7 +8,11 @@
   if (!canvas) return;
 
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const lowPower = innerWidth < 720 || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4);
+  const touchMode =
+    matchMedia("(max-width: 980px)").matches
+    || matchMedia("(pointer: coarse)").matches
+    || document.documentElement.dataset.touchLayout === "true";
+  const lowPower = touchMode || innerWidth < 720 || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4);
   const frameInterval = lowPower ? 1000 / 30 : 0;
   const ctx = canvas.getContext("2d", { alpha: true });
   let w = 0;
@@ -226,12 +230,22 @@
     raf = requestAnimationFrame(frame);
   }
 
+  function paintStatic() {
+    resize();
+    ctx.clearRect(0, 0, w, h);
+    const g = ctx.createRadialGradient(w * 0.58, h * 0.4, 0, w * 0.58, h * 0.4, w * 0.7);
+    g.addColorStop(0, "rgba(200,255,60,0.1)");
+    g.addColorStop(0.45, "rgba(160,220,50,0.04)");
+    g.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, w, h);
+    drawRibbonField(0, 0);
+  }
+
   function start() {
-    if (reduce) {
-      resize();
-      // Static soft wash only
-      ctx.fillStyle = "rgba(200,255,60,0.04)";
-      ctx.fillRect(0, 0, w, h);
+    if (reduce || touchMode) {
+      paintStatic();
+      canvas.dataset.static = "true";
       return;
     }
     cancelAnimationFrame(raf);
@@ -250,12 +264,14 @@
     resizeTimer = setTimeout(resize, lowPower ? 180 : 60);
   });
 
-  addEventListener("scroll", () => {
-    const max = document.documentElement.scrollHeight - innerHeight;
-    window.__relayScroll = max > 0 ? window.scrollY / max : 0;
-  }, { passive: true });
+  if (!touchMode) {
+    addEventListener("scroll", () => {
+      const max = document.documentElement.scrollHeight - innerHeight;
+      window.__relayScroll = max > 0 ? window.scrollY / max : 0;
+    }, { passive: true });
+    document.addEventListener("visibilitychange", () => (document.hidden ? stop() : start()));
+  }
 
-  document.addEventListener("visibilitychange", () => (document.hidden ? stop() : start()));
   resize();
   start();
 })();

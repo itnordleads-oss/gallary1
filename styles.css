@@ -419,9 +419,18 @@ em { font-family: var(--serif); font-style: italic; font-weight: 400; }
 @media (max-width: 980px), (pointer: coarse) {
   html, body {
     height: auto;
+    min-height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
     scroll-behavior: auto;
     overscroll-behavior-y: auto;
     -webkit-overflow-scrolling: touch;
+  }
+  body { touch-action: pan-y; }
+  #ribbons[data-static="true"] {
+    position: absolute;
+    height: 100vh;
+    max-height: 100vh;
   }
   html[data-touch-layout="true"] .reveal,
   html[data-touch-layout="true"] .glass,

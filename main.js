@@ -66,15 +66,22 @@
     if (status) status.textContent = "";
   });
 
+  function setCount(el, target) {
+    el.textContent = target >= 1000 ? target.toLocaleString("en-US") : String(target);
+  }
+
   function animateCount(el, target) {
+    if (!window.gsap) {
+      setCount(el, target);
+      return;
+    }
     const obj = { v: 0 };
     gsap.to(obj, {
       v: target,
       duration: 1.2,
       ease: "power2.out",
       onUpdate: () => {
-        el.textContent =
-          target >= 1000 ? Math.round(obj.v).toLocaleString("en-US") : String(Math.round(obj.v));
+        setCount(el, Math.round(obj.v));
       },
     });
   }
@@ -92,14 +99,33 @@
       const r = Number(circle.getAttribute("r") || 38);
       const circ = 2 * Math.PI * r;
       circle.style.strokeDasharray = String(circ);
-      gsap.fromTo(circle, { strokeDashoffset: circ }, { strokeDashoffset: circ * (1 - pct / 100), duration: 1.4, ease: "power2.out" });
+      const offset = circ * (1 - pct / 100);
+      if (window.gsap) {
+        gsap.fromTo(circle, { strokeDashoffset: circ }, { strokeDashoffset: offset, duration: 1.4, ease: "power2.out" });
+      } else {
+        circle.style.strokeDashoffset = String(offset);
+      }
     });
     section.querySelectorAll("[data-bar]").forEach((bar) => {
       if (bar.dataset.done) return;
       bar.dataset.done = "1";
-      gsap.fromTo(bar, { width: "0%" }, { width: `${bar.dataset.bar}%`, duration: 1.15, ease: "power2.out" });
+      const width = `${bar.dataset.bar}%`;
+      if (window.gsap) {
+        gsap.fromTo(bar, { width: "0%" }, { width, duration: 1.15, ease: "power2.out" });
+      } else {
+        bar.style.width = width;
+      }
     });
     section.classList.add("is-in");
+  }
+
+  function revealAllContent() {
+    document.querySelectorAll(".reveal, .glass, .lime-band, .section, .hero, .app, .bubble, .bubble-wire").forEach((el) => {
+      el.classList.add("is-in");
+      el.style.opacity = "1";
+      el.style.transform = "none";
+      el.style.filter = "none";
+    });
   }
 
   function popWorkflow() {
@@ -109,14 +135,22 @@
     card.classList.add("workflow-pop");
   }
 
-  // ---------- GSAP Scroll animations (video-style) ----------
-  if (!window.gsap || !window.ScrollTrigger || reduceMotion) {
-    document.querySelectorAll(".reveal, .glass, .lime-band, .section, .hero").forEach((el) => {
-      el.classList.add("is-in");
-      el.style.opacity = "1";
-      el.style.transform = "none";
+  function initTouchScrollMode() {
+    revealAllContent();
+    document.querySelectorAll(".section, .hero, .site-footer").forEach((section) => {
+      triggerSectionFX(section);
     });
     popWorkflow();
+  }
+
+  if (touchLayout || reduceMotion) {
+    initTouchScrollMode();
+    return;
+  }
+
+  // ---------- GSAP Scroll animations (video-style) ----------
+  if (!window.gsap || !window.ScrollTrigger) {
+    initTouchScrollMode();
     return;
   }
 
@@ -124,25 +158,6 @@
 
   // Kill old CSS reveal hiding — GSAP owns motion now
   gsap.set(".reveal", { clearProps: "all" });
-
-  if (touchLayout) {
-    // Phone scroll was fighting hidden GSAP states: text stayed at opacity 0
-    // until a trigger fired, and clip/transform left the page feeling stuck.
-    gsap.set("h1, h2, h3, p, .reveal, .glass, .lime-band, .app, .btn, .kicker, .muted", {
-      opacity: 1,
-      x: 0,
-      y: 0,
-      scale: 1,
-      filter: "none",
-      clearProps: "transform,filter",
-    });
-    document.querySelectorAll(".section, .hero, .site-footer").forEach((section) => {
-      section.classList.add("is-in");
-      triggerSectionFX(section);
-    });
-    popWorkflow();
-    return;
-  }
 
   // Hero entrance
   const heroTl = gsap.timeline({ defaults: { ease: "power3.out" } });
