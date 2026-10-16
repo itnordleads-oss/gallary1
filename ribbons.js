@@ -250,14 +250,9 @@
     resizeTimer = setTimeout(resize, lowPower ? 180 : 60);
   });
 
-  let scrollIdle = 0;
   addEventListener("scroll", () => {
     const max = document.documentElement.scrollHeight - innerHeight;
     window.__relayScroll = max > 0 ? window.scrollY / max : 0;
-    if (!lowPower) return;
-    stop();
-    clearTimeout(scrollIdle);
-    scrollIdle = setTimeout(start, 160);
   }, { passive: true });
 
   document.addEventListener("visibilitychange", () => (document.hidden ? stop() : start()));

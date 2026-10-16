@@ -1,5 +1,7 @@
 (() => {
   const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const touchLayout = matchMedia("(max-width: 980px)").matches || matchMedia("(pointer: coarse)").matches;
+  if (touchLayout) document.documentElement.dataset.touchLayout = "true";
   const nav = document.querySelector(".nav");
   const menuBtn = document.querySelector(".menu-btn");
 
@@ -123,8 +125,7 @@
   // Kill old CSS reveal hiding — GSAP owns motion now
   gsap.set(".reveal", { clearProps: "all" });
 
-  const mobileMotion = matchMedia("(max-width: 980px)").matches;
-  if (mobileMotion) {
+  if (touchLayout) {
     // Phone scroll was fighting hidden GSAP states: text stayed at opacity 0
     // until a trigger fired, and clip/transform left the page feeling stuck.
     gsap.set("h1, h2, h3, p, .reveal, .glass, .lime-band, .app, .btn, .kicker, .muted", {
@@ -167,7 +168,7 @@
 
   // Parallax hero card stays off on touch layouts so the card cannot drift off-screen.
   const card = document.querySelector(".float-card");
-  if (card && !mobileMotion) {
+  if (card && !touchLayout) {
     addEventListener(
       "pointermove",
       (e) => {
@@ -193,22 +194,22 @@
     );
     const textKids = kids.filter((node) => !bubbleCards.includes(node));
 
-    const initial = mobileMotion
+    const initial = touchLayout
       ? { opacity: 0, y: 18, x: 0, scale: 1, filter: "none" }
       : {
           opacity: 0,
           scale: opts.scale ?? 0.96,
           filter: "blur(8px)",
         };
-    if (!mobileMotion && opts.x !== undefined) initial.x = opts.x;
-    if (!mobileMotion && (opts.y !== undefined || opts.x === undefined)) initial.y = opts.y ?? 56;
-    if (!mobileMotion && opts.rotateX !== undefined) initial.rotateX = opts.rotateX;
-    if (!mobileMotion && opts.rotateY !== undefined) initial.rotateY = opts.rotateY;
+    if (!touchLayout && opts.x !== undefined) initial.x = opts.x;
+    if (!touchLayout && (opts.y !== undefined || opts.x === undefined)) initial.y = opts.y ?? 56;
+    if (!touchLayout && opts.rotateX !== undefined) initial.rotateX = opts.rotateX;
+    if (!touchLayout && opts.rotateY !== undefined) initial.rotateY = opts.rotateY;
 
     function resetSection() {
       gsap.killTweensOf(kids);
       gsap.set(kids, initial);
-      gsap.set(bubbleCards, mobileMotion
+      gsap.set(bubbleCards, touchLayout
         ? { opacity: 0, y: 18, x: 0, scale: 1, filter: "none", transformOrigin: "center center" }
         : {
             scale: opts.cardScale ?? 0.14,
@@ -256,16 +257,16 @@
     resetSection();
     ScrollTrigger.create({
       trigger: section,
-      start: mobileMotion ? "top 92%" : (opts.start || "top 88%"),
+      start: touchLayout ? "top 92%" : (opts.start || "top 88%"),
       end: opts.end || "bottom 15%",
       onEnter: playSection,
-      onEnterBack: mobileMotion ? undefined : playSection,
-      onLeaveBack: mobileMotion ? undefined : resetSection,
+      onEnterBack: touchLayout ? undefined : playSection,
+      onLeaveBack: touchLayout ? undefined : resetSection,
     });
 
     // Continuous scrub parallax while section is in view. Skip it on small screens:
     // the extra Y shift collides with the stacked layout and clips cards.
-    if (!opts.noScrub && !mobileMotion) {
+    if (!opts.noScrub && !touchLayout) {
       gsap.to(section.querySelectorAll(".glass, .lime-band"), {
         y: -28,
         ease: "none",
