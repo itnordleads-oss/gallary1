@@ -137,10 +137,23 @@
 
   function initTouchScrollMode() {
     revealAllContent();
-    document.querySelectorAll(".section, .hero, .site-footer").forEach((section) => {
-      triggerSectionFX(section);
-    });
     popWorkflow();
+    const sections = document.querySelectorAll(".section, .hero, .site-footer");
+    if (!("IntersectionObserver" in window)) {
+      sections.forEach((section) => triggerSectionFX(section));
+      return;
+    }
+    const seen = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          triggerSectionFX(entry.target);
+          seen.unobserve(entry.target);
+        });
+      },
+      { rootMargin: "0px 0px -8% 0px", threshold: 0.12 }
+    );
+    sections.forEach((section) => seen.observe(section));
   }
 
   if (touchLayout || reduceMotion) {

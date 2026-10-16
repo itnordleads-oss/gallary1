@@ -230,7 +230,7 @@
     raf = requestAnimationFrame(frame);
   }
 
-  function paintStatic() {
+  function paintStatic(scrollProgress = 0) {
     resize();
     ctx.clearRect(0, 0, w, h);
     const g = ctx.createRadialGradient(w * 0.58, h * 0.4, 0, w * 0.58, h * 0.4, w * 0.7);
@@ -239,13 +239,24 @@
     g.addColorStop(1, "rgba(0,0,0,0)");
     ctx.fillStyle = g;
     ctx.fillRect(0, 0, w, h);
-    drawRibbonField(0, 0);
+    drawRibbonField(0, scrollProgress);
   }
 
   function start() {
     if (reduce || touchMode) {
-      paintStatic();
+      paintStatic(0);
       canvas.dataset.static = "true";
+      let paintTimer = 0;
+      document.documentElement.addEventListener("relay-scroll", (event) => {
+        clearTimeout(paintTimer);
+        paintTimer = setTimeout(() => {
+          paintStatic(Number(event.detail) || 0);
+        }, 16);
+      });
+      addEventListener("resize", () => {
+        clearTimeout(paintTimer);
+        paintTimer = setTimeout(() => paintStatic(Number(window.__relayScroll) || 0), 80);
+      });
       return;
     }
     cancelAnimationFrame(raf);
