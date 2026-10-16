@@ -145,9 +145,11 @@
       "-=0.75"
     );
 
-  // Parallax hero card
+  const mobileMotion = matchMedia("(max-width: 980px)").matches;
+
+  // Parallax hero card stays off on touch layouts so the card cannot drift off-screen.
   const card = document.querySelector(".float-card");
-  if (card) {
+  if (card && !mobileMotion) {
     addEventListener(
       "pointermove",
       (e) => {
@@ -173,28 +175,32 @@
     );
     const textKids = kids.filter((node) => !bubbleCards.includes(node));
 
-    const initial = {
-      opacity: 0,
-      scale: opts.scale ?? 0.96,
-      filter: "blur(8px)",
-    };
-    if (opts.x !== undefined) initial.x = opts.x;
-    if (opts.y !== undefined || opts.x === undefined) initial.y = opts.y ?? 56;
-    if (opts.rotateX !== undefined) initial.rotateX = opts.rotateX;
-    if (opts.rotateY !== undefined) initial.rotateY = opts.rotateY;
+    const initial = mobileMotion
+      ? { opacity: 0, y: 18, x: 0, scale: 1, filter: "none" }
+      : {
+          opacity: 0,
+          scale: opts.scale ?? 0.96,
+          filter: "blur(8px)",
+        };
+    if (!mobileMotion && opts.x !== undefined) initial.x = opts.x;
+    if (!mobileMotion && (opts.y !== undefined || opts.x === undefined)) initial.y = opts.y ?? 56;
+    if (!mobileMotion && opts.rotateX !== undefined) initial.rotateX = opts.rotateX;
+    if (!mobileMotion && opts.rotateY !== undefined) initial.rotateY = opts.rotateY;
 
     function resetSection() {
       gsap.killTweensOf(kids);
       gsap.set(kids, initial);
-      gsap.set(bubbleCards, {
-        scale: opts.cardScale ?? 0.14,
-        opacity: 0,
-        filter: "blur(13px)",
-        rotateX: 0,
-        rotateY: 0,
-        rotateZ: 0,
-        transformOrigin: "center center",
-      });
+      gsap.set(bubbleCards, mobileMotion
+        ? { opacity: 0, y: 18, x: 0, scale: 1, filter: "none", transformOrigin: "center center" }
+        : {
+            scale: opts.cardScale ?? 0.14,
+            opacity: 0,
+            filter: "blur(13px)",
+            rotateX: 0,
+            rotateY: 0,
+            rotateZ: 0,
+            transformOrigin: "center center",
+          });
     }
 
     function playSection() {
@@ -232,15 +238,16 @@
     resetSection();
     ScrollTrigger.create({
       trigger: section,
-      start: opts.start || "top 88%",
+      start: mobileMotion ? "top 92%" : (opts.start || "top 88%"),
       end: opts.end || "bottom 15%",
       onEnter: playSection,
-      onEnterBack: playSection,
-      onLeaveBack: resetSection,
+      onEnterBack: mobileMotion ? undefined : playSection,
+      onLeaveBack: mobileMotion ? undefined : resetSection,
     });
 
-    // Continuous scrub parallax while section is in view
-    if (!opts.noScrub) {
+    // Continuous scrub parallax while section is in view. Skip it on small screens:
+    // the extra Y shift collides with the stacked layout and clips cards.
+    if (!opts.noScrub && !mobileMotion) {
       gsap.to(section.querySelectorAll(".glass, .lime-band"), {
         y: -28,
         ease: "none",
