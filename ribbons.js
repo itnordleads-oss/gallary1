@@ -12,7 +12,8 @@
     matchMedia("(max-width: 980px)").matches
     || matchMedia("(pointer: coarse)").matches
     || document.documentElement.dataset.touchLayout === "true";
-  const lowPower = touchMode || innerWidth < 720 || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4);
+  const lowCore = navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4;
+  const lowPower = touchMode || innerWidth < 720 || lowCore;
   const frameInterval = lowPower ? 1000 / 30 : 0;
   const ctx = canvas.getContext("2d", { alpha: true });
   let w = 0;
@@ -34,7 +35,8 @@
   }));
 
   function resize() {
-    dpr = Math.min(devicePixelRatio || 1, lowPower ? 1 : 1.75);
+    const dprCap = lowCore ? 1 : touchMode ? 1.5 : 1.75;
+    dpr = Math.min(devicePixelRatio || 1, dprCap);
     const nextW = Math.max(1, Math.round(canvas.clientWidth || innerWidth));
     const nextH = Math.max(1, Math.round(canvas.clientHeight || innerHeight));
     if (nextW === w && nextH === h) return;
@@ -281,6 +283,18 @@
       window.__relayScroll = max > 0 ? window.scrollY / max : 0;
     }, { passive: true });
     document.addEventListener("visibilitychange", () => (document.hidden ? stop() : start()));
+  } else {
+    let scrollFrame = 0;
+    addEventListener("scroll", () => {
+      if (scrollFrame) return;
+      scrollFrame = requestAnimationFrame(() => {
+        scrollFrame = 0;
+        const max = document.documentElement.scrollHeight - innerHeight;
+        const progress = max > 0 ? window.scrollY / max : 0;
+        window.__relayScroll = progress;
+        paintStatic(progress);
+      });
+    }, { passive: true });
   }
 
   resize();
