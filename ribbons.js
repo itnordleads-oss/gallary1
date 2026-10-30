@@ -9,7 +9,7 @@
 
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const touchMode =
-    matchMedia("(max-width: 980px)").matches
+    matchMedia("(max-width: 1180px)").matches
     || matchMedia("(pointer: coarse)").matches
     || document.documentElement.dataset.touchLayout === "true";
   const lowCore = navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4;
@@ -218,12 +218,20 @@
 
     ctx.clearRect(0, 0, w, h);
 
-    // Soft green atmosphere behind ribbons (video bloom)
-    const g = ctx.createRadialGradient(w * 0.58, h * 0.4, 0, w * 0.58, h * 0.4, w * 0.7);
-    g.addColorStop(0, "rgba(200,255,60,0.08)");
-    g.addColorStop(0.4, "rgba(160,220,50,0.035)");
+    // Soft green atmosphere — intensity eases with scroll so mid-page stays quieter.
+    const bloom = 0.055 + (1 - Math.min(1, scrollP * 1.35)) * 0.035;
+    const g = ctx.createRadialGradient(w * 0.62, h * 0.32, 0, w * 0.62, h * 0.32, w * 0.68);
+    g.addColorStop(0, `rgba(200,255,60,${bloom})`);
+    g.addColorStop(0.42, `rgba(160,220,50,${bloom * 0.42})`);
     g.addColorStop(1, "rgba(0,0,0,0)");
     ctx.fillStyle = g;
+    ctx.fillRect(0, 0, w, h);
+
+    // Secondary depth pocket near lower workflow sections.
+    const g2 = ctx.createRadialGradient(w * 0.28, h * 0.72, 0, w * 0.28, h * 0.72, w * 0.45);
+    g2.addColorStop(0, `rgba(70,110,50,${0.04 + scrollP * 0.03})`);
+    g2.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = g2;
     ctx.fillRect(0, 0, w, h);
 
     drawRibbonField(time, scrollP);

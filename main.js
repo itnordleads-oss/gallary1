@@ -1,6 +1,6 @@
 (() => {
   const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const touchLayout = matchMedia("(max-width: 980px)").matches || matchMedia("(pointer: coarse)").matches;
+  const touchLayout = matchMedia("(max-width: 1180px)").matches || matchMedia("(pointer: coarse)").matches;
   if (touchLayout) document.documentElement.dataset.touchLayout = "true";
   const nav = document.querySelector(".nav");
   const menuBtn = document.querySelector(".menu-btn");
@@ -38,7 +38,14 @@
   }
   function syncPrice() {
     if (!range || !priceVal) return;
-    priceVal.textContent = String(priceFromRuns(Number(range.value)));
+    const value = Number(range.value);
+    const min = Number(range.min) || 0;
+    const max = Number(range.max) || 1;
+    const fill = ((value - min) / (max - min)) * 100;
+    priceVal.textContent = String(priceFromRuns(value));
+    range.setAttribute("aria-valuenow", String(value));
+    const wrap = range.closest(".slider-wrap");
+    if (wrap) wrap.style.setProperty("--fill", `${fill.toFixed(2)}%`);
   }
   range?.addEventListener("input", syncPrice);
   syncPrice();
